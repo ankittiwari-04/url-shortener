@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/db');
+const urlRoutes = require('./routes/url.routes');
 
 connectDB();
 
@@ -8,6 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use('/api', urlRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ 
