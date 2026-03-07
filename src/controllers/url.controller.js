@@ -1,5 +1,6 @@
 const Url = require('../models/Url.model');
 const generateShortCode = require('../utils/generateCode');
+const redis = require('../config/redis');
 
 const shortenUrl = async (req, res) => {
   try {
@@ -56,6 +57,21 @@ const redirectUrl = async (req, res) => {
   try {
     const { code } = req.params;
 
+    // 1. Check Redis first
+    const cached = await redis.get(`url:${code}`);
+
+    if (cached) {
+      console.log('Cache HIT ⚡');
+      Url.findOneAndUpdate(
+        { shortCode: code }, 
+        { $inc: { clicks: 1 } }
+      ).exec();
+      return res.redirect(302, cached);
+    }
+
+    console.log('Cache MISS — querying MongoDB');
+
+    // 2. Not in cache — query MongoDB
     const url = await Url.findOne({ shortCode: code });
 
     if (!url) {
@@ -71,6 +87,9 @@ const redirectUrl = async (req, res) => {
         error: 'This link has expired' 
       });
     }
+
+    // 3. Store in Redis for 24 hours
+    await redis.set(`url:${code}`, url.originalUrl, 'EX', 86400);
 
     await Url.findByIdAndUpdate(url._id, { $inc: { clicks: 1 } });
 
