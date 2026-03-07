@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use('/api', urlRoutes);
+app.use('/', urlRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ 
