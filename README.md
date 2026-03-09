@@ -37,3 +37,10 @@ Shorten a long URL.
   }
 }
 ```
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/shorten | Create a short URL |
+| GET | /:code | Redirect to original URL |
+| GET | /api/analytics/:code | Get click analytics |
