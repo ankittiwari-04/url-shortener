@@ -5,8 +5,9 @@ const {
   redirectUrl,
   getAnalytics 
 } = require('../controllers/url.controller');
+const { shortenLimiter } = require('../middlewares/ratelimiter');
 
-router.post('/shorten', shortenUrl);
+router.post('/shorten', shortenLimiter, shortenUrl);
 router.get('/analytics/:code', getAnalytics);
 router.get('/:code', redirectUrl);
 

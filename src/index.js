@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/db');
 const urlRoutes = require('./routes/url.routes');
+const { startCleanupJob } = require('./utils/cleanup');
 
 connectDB();
 
@@ -22,4 +23,5 @@ app.get('/health', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  startCleanupJob();
 });
