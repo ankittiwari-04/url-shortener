@@ -10,8 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.static('public'));
 
-// Health check FIRST before any other routes
 app.get('/health', (req, res) => {
   res.json({ 
     success: true,
