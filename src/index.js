@@ -10,16 +10,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use('/api', urlRoutes);
-app.use('/', urlRoutes);
 
+// Health check FIRST before any other routes
 app.get('/health', (req, res) => {
   res.json({ 
-    status: 'ok', 
+    success: true,
     message: 'Server is running',
     timestamp: new Date().toISOString()
   });
 });
+
+app.use('/api', urlRoutes);
+app.use('/', urlRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
